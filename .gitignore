@@ -1,0 +1,12 @@
+# Created by https://www.gitignore.io/api/ansible
+
+### Ansible ###
+*.retry
+
+
+# End of https://www.gitignore.io/api/ansible
+
+#jp-c: 自分で記述
+#en-c: My
+*~
+*.swp
