@@ -1,0 +1,37 @@
+# anyenv
+- name: git clone anyenv
+  become: yes
+  git:
+    repo: https://github.com/riywo/anyenv
+    dest: "{{ anyenv.root }}"
+
+- name: anyenvのupdate用pluginsを入れるためmkdir
+  become: yes
+  file:
+    path: "{{ anyenv.root }}/plugins"
+    state: directory
+
+- name: anyenvのupdate用pluginsを入れるためmkdir
+  become: yes
+  git:
+    repo: https://github.com/znz/anyenv-update.git
+    dest: "{{ anyenv.root }}/plugins/anyenv-update"
+
+- name: anyenvをシステムワイドにするため、設定を/etc/profile.d以下におく
+  become: yes
+  template:
+    src: anyenv.sh.j2
+    dest: /etc/profile.d/anyenv.sh
+    owner: root
+    group: root
+    mode: 0755
+
+- name: SHELLの再起動
+  become: yes
+  shell: bash -lc "exec $SHELL -l"
+
+- name: anyenvで**envを入れる
+  become: yes
+  shell: bash -lc "anyenv install {{ item }} --skip-existing"
+  with_items:
+    - rbenv

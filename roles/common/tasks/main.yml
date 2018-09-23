@@ -1,0 +1,75 @@
+---
+#- name: テスト
+#  debug:
+#    msg: "{{ item }}"
+#  with_items:
+#    - "{{ ansible_env }}"
+#    - "{{ group_names }}"
+#    - "{{ groups }}"
+#    - "{{ inventory_hostname }}"
+#    - "{{ play_hosts }}"
+#    - "{{ inventory_dir }}"
+#    - "{{ inventory_file }}"
+#    - "{{ dev_user }}"
+#    - "{{ anyenv }}"
+
+- name: 管理者用ユーザの作成(Not root, yes admin)
+  become: yes
+  user:
+    name: "{{ god_user.name }}"
+    password: "{{ god_user.password | string | password_hash('sha512') }}"
+    uid: "{{ god_user.uid }}"
+    #group: # メイングループ(なかったら、user名と同名のグループが自動作成)
+    groups: "{{ god_user.groups }}" # サブグループ
+    update_password: on_create # default: always
+    state: present # default: present(ユーザ作成), absent(削除)
+    createhome: yes # default: yes
+
+- name: 管理者用ユーザでsudoするとき、passwordを聞かれないようにする
+  become: yes
+  template:
+    src: sudoer.j2
+    dest: "/etc/sudoers.d/{{ item.name }}"
+    owner: root
+    group: root
+    mode: 0440
+  with_items:
+    - "{{ god_user }}"
+
+- name: 開発者用グループの作成
+  become: yes
+  group:
+    name: "{{ dev_group.name }}"
+    gid: "{{ dev_group.gid }}"
+
+- name: 開発者用ユーザの作成
+  become: yes
+  user:
+    name: "{{ dev_user.name }}"
+    password: "{{ dev_user.password | string | password_hash('sha512') }}"
+    uid: "{{ dev_user.uid }}"
+    group: "{{ dev_user.group }}"
+    groups: "{{ dev_user.groups }}"
+    shell: /bin/bash
+    update_password: on_create
+    state: present
+    createhome: yes
+
+- name: 開発者用ユーザのssh公開鍵の配布
+  become: yes
+  authorized_key:
+    user: "{{ dev_user.name }}"
+    key: "{{ item }}"
+    state: present
+  with_file:
+    - "{{ dev_user.ssh_pub_key }}"
+
+- name: vimとgitだけは最低限入れる
+  become: yes
+  apt:
+    name: "{{ item }}"
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - vim
+    - git
