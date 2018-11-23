@@ -30,3 +30,11 @@ dev_user:
     3861313533633538650a306533353036656662626164636162666166373565343735663735613137
     3363
   ssh_pub_key: "~/.ssh/vm/id_ed25519_sunakan.pub"
+
+# 勉強になる https://github.com/nickjj/ansible-docker
+# 要確認 https://docs.docker.com/install/linux/docker-ce/debian/#set-up-the-repository
+# keyサーバはOSによって変わるので注意する
+docker:
+  apt_key_id: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
+  apt_key_server: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
+  apt_repository: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"

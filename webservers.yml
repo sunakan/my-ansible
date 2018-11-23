@@ -3,3 +3,4 @@
     - common
     - anyenv
     - rbenv
+    - docker
