@@ -1,3 +1,4 @@
+---
 # anyenv
 - name: git clone anyenv
   become: yes
@@ -29,9 +30,3 @@
 - name: SHELLの再起動
   become: yes
   shell: bash -lc "exec $SHELL -l"
-
-- name: anyenvで**envを入れる
-  become: yes
-  shell: bash -lc "anyenv install {{ item }} --skip-existing"
-  with_items:
-    - rbenv

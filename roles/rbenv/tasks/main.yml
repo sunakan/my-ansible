@@ -1,0 +1,43 @@
+---
+- name: anyenvでrbenvを入れる
+  become: yes
+  shell: bash -lc "anyenv install rbenv --skip-existing"
+
+- name: rbenvでrubyを入れるのに必要なパッケージを入れる
+  become: yes
+  apt:
+    name:
+      - build-essential
+      - libssl-dev
+      - libreadline-dev
+      - zlib1g-dev
+
+- name: rbenvで入る最新版を調べる
+  shell: bash -lc "rbenv install -l | grep -v - | tail -1"
+  register: latest_ruby_version
+
+- name: rubyの最新版
+  debug:
+    msg: "{{ latest_ruby_version.stdout }}"
+
+- name: rbenvでrubyを入れる
+  become: yes
+  shell: bash -lc "rbenv install {{ latest_ruby_version.stdout }} --skip-existing"
+
+- name: rbenvで入れたrubyのバージョンを使用する
+  become: yes
+  shell: bash -lc "rbenv global {{ latest_ruby_version.stdout }}"
+
+- name: "anyenv rootの確認"
+  debug:
+    msg: "{{ anyenv.root }}"
+
+- name: gem で bundler,pry をインストール
+  become: yes
+  gem:
+    name: "{{ item }}"
+    executable: "{{ anyenv.root }}/envs/rbenv/shims/gem"
+    user_install: no
+  with_items:
+    - bundler
+    - pry
