@@ -55,7 +55,7 @@
     state: present
     createhome: yes
 
-- name: 開発者用ユーザのssh公開鍵の配布
+- name: 開発者用ユーザのssh公開鍵の配布(ssh_pub_keyに設定したpub_keyファイルを置く)
   become: yes
   authorized_key:
     user: "{{ dev_user.name }}"
@@ -64,12 +64,15 @@
   with_file:
     - "{{ dev_user.ssh_pub_key }}"
 
-- name: vimとgitだけは最低限入れる
+- name: 開発で最低限欲しいパッケージを入れる
   become: yes
   apt:
-    name: "{{ item }}"
+    name:
+      - vim
+      - git
+      - tig
+      - tmux
+      - tree
+      - psmisc
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-    - vim
-    - git
