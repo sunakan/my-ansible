@@ -31,6 +31,17 @@ or
 $ ansible-playbook -i inventories/development/hosts.yml site.yml --vault-password-file=ANSIBLE_VAULT_PASSWORD
 ~~~
 
+## Serverspecの実行方法
+
+~~~
+## 事前準備
+$ bundle install --path (好きな場所、例:.bundle/bundle, vendor/bundleなど)
+## どういうテストがあるか確認
+$ bundle exec rake -vT
+## テスト実行
+$ bundle exec rake spec:all
+~~~
+
 ## 注意
 もしvault-password-fileを指定するならReadOnly
 
