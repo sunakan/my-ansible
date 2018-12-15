@@ -1,8 +1,4 @@
 ---
-- name: デバッグ1
-  debug:
-    msg: "{{ ansible_kernel }}"
-
 - name: カーネルのバージョンを確認する(skippingならOK)
   fail:
     msg: "Dockerは Kernel {{ ansible_kernel }} をサポートしていません"
@@ -10,7 +6,7 @@
 
 # [参考]
 # https://docs.docker.com/install/linux/docker-ce/debian/#set-up-the-repository
-- name: Dockerに必要なパッケージを入れる()
+- name: Dockerに必要なパッケージを入れる
   become: yes
   apt:
     name:
@@ -39,6 +35,7 @@
 - name: Install Docker Comunity Edition
   become: yes
   apt:
+    name: "docker-ce"
 
 - name: Dockerの設定ディレクトリを作成
   become: yes
@@ -52,4 +49,5 @@
     - "/etc/docker"
     - "/etc/systemd/system/docker.service.d"
 
-
+- include_tasks: docker-compose.yml
+  when: docker.install_compose
