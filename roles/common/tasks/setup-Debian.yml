@@ -1,0 +1,14 @@
+---
+
+- name: 開発で最低限欲しいパッケージを入れる
+  become: yes
+  apt:
+    name:
+      - vim
+      - git
+      - tig
+      - tmux
+      - tree
+      - psmisc # pstreeが入ってる
+    update_cache: yes
+    cache_valid_time: 3600

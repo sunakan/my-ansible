@@ -1,0 +1,12 @@
+---
+
+- name: 開発で最低限欲しいパッケージを入れる
+  become: yes
+  yum:
+    name:
+      - vim
+      - git
+      - tmux
+      - tree
+      - psmisc # pstreeが入ってる
+    update_cache: yes

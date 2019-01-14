@@ -3,7 +3,8 @@
 god_user:
   name: kamisama
   uid: 9999
-  groups: "staff,sudo" # "hoge,fuga"
+  debian_groups: "staff,sudo" # "hoge,fuga"
+  redhat_groups: "users,wheel"
   password: !vault |
     $ANSIBLE_VAULT;1.1;AES256
     33653136663734313763376663376136303433333330656234323963393065623661346636636138
@@ -20,7 +21,8 @@ dev_user:
   name: "sunakan"
   uid: 10001
   group: "developers"
-  groups: "staff,sudo"
+  debian_groups: "staff,sudo" # "hoge,fuga"
+  redhat_groups: "users,wheel"
   state: "present"
   password: !vault |
     $ANSIBLE_VAULT;1.1;AES256
