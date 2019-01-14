@@ -20,7 +20,7 @@
     password: "{{ god_user.password | string | password_hash('sha512') }}"
     uid: "{{ god_user.uid }}"
     #group: # メイングループ(なかったら、user名と同名のグループが自動作成)
-    groups: "{{ god_user.groups }}" # サブグループ
+    groups: "{% if ansible_os_family == 'Debian' %}{{ god_user.debian_groups }}{% else %}{{ god_user.redhat_groups }} {% endif %}" # サブグループ
     update_password: on_create # default: always
     state: present # default: present(ユーザ作成), absent(削除)
     createhome: yes # default: yes
@@ -49,7 +49,7 @@
     password: "{{ dev_user.password | string | password_hash('sha512') }}"
     uid: "{{ dev_user.uid }}"
     group: "{{ dev_user.group }}"
-    groups: "{{ dev_user.groups }}"
+    groups: "{% if ansible_os_family == 'Debian' %}{{ god_user.debian_groups }}{% else %}{{ god_user.redhat_groups }} {% endif %}" # サブグループ
     shell: /bin/bash
     update_password: on_create
     state: present
@@ -64,15 +64,9 @@
   with_file:
     - "{{ dev_user.ssh_pub_key }}"
 
-- name: 開発で最低限欲しいパッケージを入れる
-  become: yes
-  apt:
-    name:
-      - vim
-      - git
-      - tig
-      - tmux
-      - tree
-      - psmisc
-    update_cache: yes
-    cache_valid_time: 3600
+# OSの違いによって挙動を変える(最低限のpackageを入れる)
+- include_tasks: setup-Redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
