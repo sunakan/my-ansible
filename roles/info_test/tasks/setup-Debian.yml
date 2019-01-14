@@ -1,0 +1,5 @@
+---
+
+- name: ファイル名
+  debug:
+    msg: "これは 'setup-Debian.yml' です"
