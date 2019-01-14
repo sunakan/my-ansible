@@ -1,0 +1,12 @@
+---
+
+- name: OSファミリー
+  debug:
+    msg: "{{ ansible_os_family }}"
+
+# OSの違いによって挙動を変える
+- include_tasks: setup-Redhat.yml
+  when: ansible_os_family == 'RedHat'
+
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == 'Debian'
