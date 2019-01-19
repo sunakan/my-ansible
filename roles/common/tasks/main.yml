@@ -64,9 +64,14 @@
   with_file:
     - "{{ dev_user.ssh_pub_key }}"
 
-# OSの違いによって挙動を変える(最低限のpackageを入れる)
+# OSの違いによって挙動を変える
 - include_tasks: setup-Redhat.yml
   when: ansible_os_family == 'RedHat'
 
 - include_tasks: setup-Debian.yml
   when: ansible_os_family == 'Debian'
+
+- name: timezoneを東京にする
+  become: yes
+  timezone:
+    name: Asia/Tokyo
