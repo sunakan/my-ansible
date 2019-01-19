@@ -12,3 +12,31 @@
       - psmisc # pstreeが入ってる
     update_cache: yes
     cache_valid_time: 3600
+
+- name: 日本語パッケージを入れる(Ubuntu用)
+  become: yes
+  apt:
+    name:
+      - language-pack-ja
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_distribution == 'Ubuntu'
+
+- name: 日本語パッケージを入れる(Debian用)
+  become: yes
+  apt:
+    name:
+      - task-japanese
+    update_cache: yes
+    cache_valid_time: 3600
+  when: ansible_distribution == 'Debian'
+
+- name: create locale ja_JP.UTF-8
+  become: yes
+  locale_gen:
+    name: ja_JP.UTF-8
+
+- name: change locale
+  become: yes
+  command: update-locale LANG=ja_JP.UTF-8
+  changed_when: False
