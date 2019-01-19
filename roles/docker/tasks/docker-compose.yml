@@ -7,15 +7,22 @@
 
 - name: もし現在のバージョンが古い場合、削除する
   file:
-    path: "{{ docker.compose_path }}"
+    path: /usr/local/bin/docker-compose
     state: absent
   when: >
     docker_compose_current_version.stdout is defined
     and docker.compose_version not in docker_compose_current_version.stdout
 
-- name: Install docker-compose
+- name: docker-compose のインストール
   become: yes
   get_url:
     url: "https://github.com/docker/compose/releases/download/{{ docker.compose_version }}/docker-compose-Linux-x86_64"
-    dest: "{{ docker.compose_path }}"
+    dest: /usr/local/bin/docker-compose
     mode: 0755
+
+- name: docker-compose コマンドのシンボリックリンクを/usr/bin/以下に貼る
+  become: yes
+  file:
+    src: /usr/local/bin/docker-compose
+    dest: /usr/bin/docker-compose
+    state: link
