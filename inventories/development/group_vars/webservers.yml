@@ -37,9 +37,4 @@ dev_user:
 # 要確認 https://docs.docker.com/install/linux/docker-ce/debian/#set-up-the-repository
 # keyサーバはOSによって変わるので注意する
 docker:
-  apt_key_id: "9DC858229FC7DD38854AE2D88D81803C0EBFCD88"
-  apt_key_server: "https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg"
-  apt_repository: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable"
-  install_compose: true
-  compose_version: "1.23.1"
-  compose_path: "/usr/local/bin/docker-compose"
+  compose_version: "1.23.2"

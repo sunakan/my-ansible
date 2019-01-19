@@ -1,0 +1,45 @@
+---
+
+- name: Dockerの古いバージョンをアンインストール
+  become: yes
+  package:
+    name:
+      - docker
+      - docker-client
+      - docker-client-latest
+      - docker-common
+      - docker-latest
+      - docker-latest-logrotate
+      - docker-logrotate
+      - docker-engine
+    state: absent
+
+- name: Dockerに必要なパッケージを入れる
+  become: yes
+  yum:
+    name:
+      - yum-utils
+      - device-mapper-persistent-data
+      - lvm2
+    update_cache: yes
+
+- name: yum-config-managerでDockerのリポジトリを追加
+  become: yes
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  changed_when: False
+
+- name: DockerCEをインストール
+  become: yes
+  yum:
+    name:
+      - docker-ce
+    update_cache: yes
+
+- name: Dockerを起動 & 自動起動ON
+  become: yes
+  systemd:
+    name: docker.service
+    state: started
+    enabled: yes
+
+- include_tasks: docker-compose.yml

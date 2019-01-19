@@ -4,50 +4,8 @@
     msg: "Dockerは Kernel {{ ansible_kernel }} をサポートしていません"
   when: "ansible_kernel is version_compare('3.10', '<')"
 
-# [参考]
-# https://docs.docker.com/install/linux/docker-ce/debian/#set-up-the-repository
-- name: Dockerに必要なパッケージを入れる
-  become: yes
-  apt:
-    name:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - gnupg2
-      - software-properties-common
-    update_cache: yes
-    cache_valid_time: 3600
+- include_tasks: setup-Debian.yml
+  when: ansible_os_family == "Debian"
 
-- name: DockerのGPGキーを追加
-  become: yes
-  apt_key:
-    id: "{{ docker.apt_key_id }}"
-    url: "{{ docker.apt_key_server }}"
-    state: present #absentで削除
-  register: already_registered_docker_gpg_key
-
-- name: Configure Docker's APT repository
-  become: yes
-  apt_repository:
-    repo: "{{ docker.apt_repository }}"
-    update_cache: true
-
-- name: Install Docker Comunity Edition
-  become: yes
-  apt:
-    name: "docker-ce"
-
-- name: Dockerの設定ディレクトリを作成
-  become: yes
-  file:
-    path: "{{ item }}"
-    state: "directory"
-    owner: "root"
-    group: "root"
-    mode: "0755"
-  loop:
-    - "/etc/docker"
-    - "/etc/systemd/system/docker.service.d"
-
-- include_tasks: docker-compose.yml
-  when: docker.install_compose
+- include_tasks: setup-RedHat.yml
+  when: ansible_os_family == 'RedHat'
