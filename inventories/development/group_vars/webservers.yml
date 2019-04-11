@@ -37,4 +37,4 @@ dev_user:
 # 要確認 https://docs.docker.com/install/linux/docker-ce/debian/#set-up-the-repository
 # keyサーバはOSによって変わるので注意する
 docker:
-  compose_version: "1.23.2"
+  compose_version: "1.24.0"

@@ -1,7 +1,3 @@
-# 自分なりのAnsibleメモ
-- ansible-galaxyというのもあるらしいが、とりあえず勉強用
-- Ansible Tutorialというのもあることを確認
-
 ## ディレクトリ構成のBase
 
 Ansibleのベストプラクティスの「Alternative Directory Layout」
@@ -13,7 +9,6 @@ Ansibleのベストプラクティスの「Alternative Directory Layout」
   - asuka
 - PrivateIPは決め打ち
 - Vagrantを利用している前提(ssh\_user=vagrant)
-- Debian系(aptを使用)
 
 ## 事前に準備
 
