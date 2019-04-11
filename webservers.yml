@@ -1,6 +1,18 @@
+---
 - hosts: webservers
+  # Ubuntu 18.04, 16.04 にデフォでPythonがない
+  # 1度gather_factをOFF、 Pythonの確認、 そしてgather_fact
+  gather_facts: no
+  pre_tasks:
+    - name: もしPythonがなかったらインストール
+      become: true
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: False
+
+    - name: Gather facts
+      setup:
+
   roles:
     - common
-    - anyenv
-    - rbenv
     - docker
+    - heroku
