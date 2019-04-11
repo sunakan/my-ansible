@@ -10,6 +10,7 @@
       - tmux
       - tree
       - psmisc # pstreeが入ってる
+      - lvm2
     update_cache: yes
     cache_valid_time: 3600
 
