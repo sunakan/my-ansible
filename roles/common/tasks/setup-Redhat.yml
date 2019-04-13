@@ -10,4 +10,5 @@
       - tree
       - psmisc # pstreeが入ってる
       - lvm2
+      - make
     update_cache: yes
