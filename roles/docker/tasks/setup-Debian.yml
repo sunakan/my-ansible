@@ -38,6 +38,7 @@
   become: yes
   apt:
     name: docker-ce
+    update_cache: yes
 
 - name: Dockerの設定ディレクトリを作成
   become: yes
